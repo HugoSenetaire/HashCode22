@@ -38,8 +38,8 @@ def parse_data(path):
                 )
             )
 
-    print("contributors: \n", contributors)
-    print("projects:\n", projects)
+    # print("contributors: \n", contributors)
+    # print("projects:\n", projects)
     return (contributors, projects)
 
 
@@ -55,7 +55,8 @@ def compute_skills(contributors, projects):
         if contributor.available_in < 1:
             for skill in contributor.skills:
                 level = contributor.skills[skill]
-                skills_data[skill][f"nb_contribs_{int(level)}"] += 1
+                for i in range(1, int(level)+1):
+                    skills_data[skill][f"nb_contribs_{i}"] += 1
                 skills_data[skill]["nb_contribs"] += 1
 
     return pd.DataFrame(skills_data).fillna(0)
