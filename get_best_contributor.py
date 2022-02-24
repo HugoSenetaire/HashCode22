@@ -1,5 +1,5 @@
 
-from liste_all_contributors import get_all_combination_contributor
+from list_all_contributors import get_all_combination_contributor
 
 def get_best_combination(best_project, contributors):
     """
