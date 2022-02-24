@@ -26,7 +26,7 @@ def parse_data(path):
             roles = []
             for j in range(int(nb_roles)):
                 skill_name, skill_level = f.readline().replace("\n", "").split(" ")
-                roles.append(Role(skill_name, skill_level))
+                roles.append(Role(skill_name, int(skill_level)))
 
             projects.append(
                 Project(
