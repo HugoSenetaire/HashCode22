@@ -1,5 +1,7 @@
-def project_possible_list(remaining_projects, persons_list):
-    available_projects = remaining_projects;
+import copy
+def project_possible_list(projects, persons_list):
+    remaining_projects = copy.deepcopy(projects)
+    available_projects = remaining_projects
     for project in remaining_projects:
         avaible_persons = persons_list
         feasible_project = False 
