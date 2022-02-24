@@ -1,5 +1,6 @@
 from update_fonction import update_t, update_choose
 from write_trajectory import write_trajectory
+from get_best_contributor import get_best_combination
 
 def roll_project_list_project_possible(contributors, projects, cost_function, max_iter = 1e5):
   """
@@ -22,7 +23,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
       dispo_projects = project_possible_list(projects, contributors)
       while len(dispo_projects)>0 :
           best_project = get_best_project(dispo_projects, cost_function) # Return a class Project element
-          best_contributors = get_best_contributor(best_project, contributors)       # Need a list of contributors, with role 1 in position 1 and so one   
+          best_contributors = get_best_combination(best_project, contributors)       # Need a list of contributors, with role 1 in position 1 and so one   
           update_choose(projects, contributors, best_project, best_contributors)
           trajectory = write_trajectory(trajectory, best_project, best_contributors)
 

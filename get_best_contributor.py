@@ -16,7 +16,7 @@ def get_best_combination(best_project, contributors):
             score+=contributor.skills[best_project.roles[k].skill_name] -  best_project.roles[k].skill_level
             if score > best_score:
                 best_score = score
-                best_contributor = combination
+                best_combination = combination
 
 
-    return best_contributor
+    return best_combination
