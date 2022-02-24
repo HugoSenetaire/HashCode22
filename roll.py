@@ -1,5 +1,8 @@
-from update_fonction import update_t, update_choose
+from update_function import update_t, update_choose
 from write_trajectory import write_trajectory
+from get_best_project import get_best_project
+from get_best_contributor import get_best_combination
+from project_possible_list import project_possible_list
 
 def roll_project_list_project_possible(contributors, projects, cost_function, max_iter = 1e5):
   """
@@ -13,7 +16,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
   #   trajectory
 
   """
-
+  nb_project_init = len(projects)
   trajectory = str("\n")
   t = 0
   while (not len(projects) > 0) and t<max_iter:
@@ -22,9 +25,12 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
       dispo_projects = project_possible_list(projects, contributors)
       while len(dispo_projects)>0 :
           best_project = get_best_project(dispo_projects, cost_function) # Return a class Project element
-          best_contributors = get_best_contributor(best_project, contributors)       # Need a list of contributors, with role 1 in position 1 and so one   
+          best_contributors = get_best_combination(best_project, contributors)       # Need a list of contributors, with role 1 in position 1 and so one   
           update_choose(projects, contributors, best_project, best_contributors)
           trajectory = write_trajectory(trajectory, best_project, best_contributors)
+  nb_project_final = len(projects)
+
+  trajectory.insert(0, str(nb_project_init-nb_project_final))
 
   return trajectory
         
@@ -43,7 +49,7 @@ def roll_project_list_project_contributor_possible(contributors, projects, cost_
   #   trajectory : Txt file with the trajectory 
 
   """
-
+  nb_project_init = len(projects)
   trajectory = str("\n")
   t = 0
   while (not len(projects) > 0) and t<max_iter:
@@ -55,6 +61,10 @@ def roll_project_list_project_contributor_possible(contributors, projects, cost_
           
           update_choose(projects, contributors, best_project, best_contributor)
           trajectory = write_trajectory(trajectory, best_project, best_contributor)
+
+  nb_project_final = len(projects)
+
+  trajectory.insert(0, str(nb_project_init-nb_project_final))
 
   return trajectory
         
