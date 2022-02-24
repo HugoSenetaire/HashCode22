@@ -31,7 +31,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
 
 
 
-def roll_project_list_project_possible(contributors, projects, cost_function, max_iter = 1e5):
+def roll_project_list_project_contributor_possible(contributors, projects, cost_function, max_iter = 1e5):
   """
   Roll the project list until we fill all projects. Difference with previous is we treat contributor and project at the same time for value
   #Parameters :
