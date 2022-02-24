@@ -15,7 +15,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
   #   trajectory
 
   """
-
+  nb_project_init = len(projects)
   trajectory = str("\n")
   t = 0
   while (not len(projects) > 0) and t<max_iter:
@@ -27,6 +27,9 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
           best_contributors = get_best_combination(best_project, contributors)       # Need a list of contributors, with role 1 in position 1 and so one   
           update_choose(projects, contributors, best_project, best_contributors)
           trajectory = write_trajectory(trajectory, best_project, best_contributors)
+  nb_project_final = len(projects)
+
+  trajectory.insert(0, str(nb_project_init-nb_project_final))
 
   return trajectory
         
@@ -45,7 +48,7 @@ def roll_project_list_project_contributor_possible(contributors, projects, cost_
   #   trajectory : Txt file with the trajectory 
 
   """
-
+  nb_project_init = len(projects)
   trajectory = str("\n")
   t = 0
   while (not len(projects) > 0) and t<max_iter:
@@ -57,6 +60,10 @@ def roll_project_list_project_contributor_possible(contributors, projects, cost_
           
           update_choose(projects, contributors, best_project, best_contributor)
           trajectory = write_trajectory(trajectory, best_project, best_contributor)
+
+  nb_project_final = len(projects)
+
+  trajectory.insert(0, str(nb_project_init-nb_project_final))
 
   return trajectory
         
