@@ -1,24 +1,23 @@
 from collections import defaultdict
 from dataclasses import dataclass
+from matplotlib.style import available
 import pandas as pd
 from paths import PATHS
 
 
 def parse_data(path):
-    contributors_data = []
+    contributors = []
     projects = []
-    skills_data = defaultdict(lambda: defaultdict(int))
+
     with open(path, "r") as f:
         nb_contributors, nb_projects = f.readline().replace("\n", "").split(" ")
         for i in range(int(nb_contributors)):
-            contributors_data.append({})
-            contributor = contributors_data[-1]
-            contributor["name"], nb_skills = f.readline().replace("\n", "").split(" ")
+            name, nb_skills = f.readline().replace("\n", "").split(" ")
+            skills = {}
             for j in range(int(nb_skills)):
                 skill_name, skill_level = f.readline().replace("\n", "").split(" ")
-                contributor[skill_name] = int(skill_level)
-                skills_data[skill_name][f"nb_contribs_{int(skill_level)}"] += 1
-                skills_data[skill_name]["nb_contribs"] += 1
+                skills[skill_name] = int(skill_level)
+            contributors.append(Contributor(name, skills))
 
         for i in range(int(nb_projects)):
             (project_name, project_length, score, best_before, nb_roles,) = (
@@ -28,24 +27,54 @@ def parse_data(path):
             for j in range(int(nb_roles)):
                 skill_name, skill_level = f.readline().replace("\n", "").split(" ")
                 roles.append(Role(skill_name, skill_level))
-                skills_data[skill_name][f"nb_projects_{int(skill_level)}"] += 1
-                skills_data[skill_name]["nb_projects"] += 1
+
             projects.append(
-                Project(project_name, project_length, score, best_before, roles)
+                Project(
+                    project_name,
+                    int(project_length),
+                    int(score),
+                    int(best_before),
+                    roles,
+                )
             )
-    contributors = pd.DataFrame(contributors_data).fillna(0)
-    skills = pd.DataFrame(skills_data).fillna(0)
 
     print("contributors: \n", contributors)
     print("projects:\n", projects)
-    print("skills:\n", skills)
-    return contributors, projects, skills
+    return (contributors, projects)
+
+
+# TODO: available, available_in
+def compute_skills(contributors, projects):
+    skills_data = defaultdict(lambda: defaultdict(int))
+    for project in projects:
+        for role in project.roles:
+            skills_data[role.skill_name][f"nb_projects_{int(role.skill_level)}"] += 1
+            skills_data[role.skill_name]["nb_projects"] += 1
+
+    for contributor in contributors:
+        if contributor.available_in < 1:
+            for skill in contributor.skills:
+                level = contributor.skills[skill]
+                skills_data[skill][f"nb_contribs_{int(level)}"] += 1
+                skills_data[skill]["nb_contribs"] += 1
+
+    return pd.DataFrame(skills_data).fillna(0)
 
 
 @dataclass
 class Role:
     skill_name: str
     skill_level: int
+
+
+class Contributor:
+    def __init__(self, name, skills):
+        self.name = name
+        self.skills = skills
+        self.available_in = 0
+
+    def __repr__(self):
+        return f"<Contributor {self.name} | {self.skills}>"
 
 
 class Project:
@@ -55,6 +84,7 @@ class Project:
         self.score = score
         self.best_before = best_before
         self.roles = roles
+        self.score_per_day = score / length
 
     def __str__(self):
         return (
@@ -70,4 +100,5 @@ class Project:
 if __name__ == "__main__":
     path = PATHS["a"]
 
-    parse_data(path)
+    contributors, projects = parse_data(path)
+    print("skills:\n", compute_skills(contributors, projects))
