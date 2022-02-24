@@ -1,7 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from matplotlib.style import available
 import pandas as pd
+
 from paths import PATHS
 
 
