@@ -1,5 +1,6 @@
-from update_fonction import update_t, update_choose
+from update_function import update_t, update_choose
 from write_trajectory import write_trajectory
+from get_best_project import get_best_project
 from get_best_contributor import get_best_combination
 
 def roll_project_list_project_possible(contributors, projects, cost_function, max_iter = 1e5):
