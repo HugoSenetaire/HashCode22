@@ -1,12 +1,13 @@
 
 from list_all_contributors import get_all_combination_contributor
+import numpy as np 
 
 def get_best_combination(best_project, contributors):
     """
     Return the best contributor combination for best project
     """
     best_combination = []
-    best_score = 0
+    best_score = - np.inf
     all_combinations = get_all_combination_contributor(best_project, contributors)
 
     for combination in all_combinations:

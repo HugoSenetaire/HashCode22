@@ -17,12 +17,3 @@ def cost_function_with_skills(coef_score, coef_cost, project, persons, projects)
             / skills_demand_offer[role.skill_name][f"nb_contribs_{level}"]
         )
     return coef_score * project_score - coef_cost * skill_cost
-
-
-if __name__ == "__main__":
-    path = PATHS["a"]
-
-    contributors, projects = parse_data(path)
-    print("skills:\n", compute_skills(contributors, projects))
-    score = cost_function_with_skills(1, 1, projects[1], contributors, projects)
-    print(score)
