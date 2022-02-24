@@ -35,6 +35,7 @@ def parse_data(path):
 
     print("contributors: \n", contributors)
     print("projects:\n", projects)
+    return contributors, projects
 
 
 @dataclass
