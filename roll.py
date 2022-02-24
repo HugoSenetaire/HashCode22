@@ -17,7 +17,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
 
   """
   nb_project_init = len(projects)
-  trajectory = str("\n")
+  trajectory = "\n"
   t = 0
   while (not len(projects) > 0) and t<max_iter:
       t +=1
@@ -30,7 +30,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
           trajectory = write_trajectory(trajectory, best_project, best_contributors)
   nb_project_final = len(projects)
 
-  trajectory.insert(0, str(nb_project_init-nb_project_final))
+  trajectory = str(nb_project_init-nb_project_final) + trajectory
 
   return trajectory
         
