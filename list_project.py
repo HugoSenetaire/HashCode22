@@ -1,6 +1,6 @@
-def list_projets_possible(leaving_projects, persons_list):
-    available_projects = leaving_projects; 
-    for project in leaving_projects:
+def project_possible_list(remaining_projects, persons_list):
+    available_projects = remaining_projects; 
+    for project in remaining_projects:
         feasible_project = false 
         for role in project.roles :
             feasible_role = false
