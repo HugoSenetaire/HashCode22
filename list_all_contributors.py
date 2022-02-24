@@ -1,17 +1,21 @@
 import copy
 
 def get_all_combination_contributor(project, contributors):
+    print("IUNPUT PROJECT", project)
     combinations = get_combination_contributor(project.roles, [], contributors)
+    print()
     return combinations
 
 
 def get_combination_contributor(roles, combination, contributors):
+    p
+
     liste_combination = []
     if len(roles) == 1 :
         for i, contributor in enumerate(contributors) :
             aux_combination = copy.deepcopy(combination)
             for skill in contributor.skills.keys() :
-                if skill == roles[0].skill_name and contributor.skills[skill] >= roles[0].skill_level -1 :
+                if skill == roles[0].skill_name and int(contributor.skills[skill]) >= int(roles[0].skill_level) -1 :
                     aux_combination.append(contributor)
                     liste_combination.append(combination)
 
@@ -22,7 +26,8 @@ def get_combination_contributor(roles, combination, contributors):
             aux_combination = copy.deepcopy(combination)
 
             for skill in contributor.skills.keys():
-                if skill == roles[0].skill_name and contributor.skills[skill] >= roles[0].skill_level -1 :
+
+                if skill == roles[0].skill_name and int(contributor.skills[skill]) >= int(roles[0].skill_level) -1 :
                     aux_combination.append(contributor) 
                     new_contributors = contributors.copy()
                     del new_contributors[i]

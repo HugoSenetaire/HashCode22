@@ -1,7 +1,7 @@
 def write_trajectory(trajectory, best_project, best_contributor):
-    trajectory += f"{best_project.name}"
+    trajectory += f"{best_project.name}\n"
     for contrib in best_contributor:
-        trajectory += f" {contrib.name}"
+        trajectory += f"{contrib.name} "
 
     trajectory+= "\n"
 

@@ -1,3 +1,4 @@
+from traceback import TracebackException
 from update_function import update_t, update_choose
 from write_trajectory import write_trajectory
 from get_best_project import get_best_project
@@ -17,20 +18,24 @@ def roll_project_list_project_possible(contributors, projects, cost_function, ma
 
   """
   nb_project_init = len(projects)
-  trajectory = str("\n")
+  trajectory = ""
   t = 0
-  while (not len(projects) > 0) and t<max_iter:
+  # print(projects)
+  while len(projects) > 0 and t<max_iter:
       t +=1
       update_t(projects, contributors, t)
       dispo_projects = project_possible_list(projects, contributors)
       while len(dispo_projects)>0 :
           best_project = get_best_project(dispo_projects, cost_function) # Return a class Project element
           best_contributors = get_best_combination(best_project, contributors)       # Need a list of contributors, with role 1 in position 1 and so one   
-          update_choose(projects, contributors, best_project, best_contributors)
+          print("PROJECTS", projects)
+          print("CONTRIBUTORS", contributors)
+          projects, contributors = update_choose(projects, contributors, best_project, best_contributors)
           trajectory = write_trajectory(trajectory, best_project, best_contributors)
-  nb_project_final = len(projects)
+          dispo_projects = project_possible_list(projects, contributors)
 
-  trajectory.insert(0, str(nb_project_init-nb_project_final))
+  nb_project_final = len(projects)
+  trajectory = str(nb_project_init-nb_project_final) +"\n" + trajectory
 
   return trajectory
         
