@@ -1,3 +1,5 @@
 # HashCode 2022 
 
-I think my Readme is better than yours Matthieu, you forgot to mention that this is the repository of the future winners.
+This is our participation to Hashcode22, enjoy! This is the repository of the future winners.
+
+
