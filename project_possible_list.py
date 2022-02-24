@@ -5,7 +5,7 @@ def project_possible_list(remaining_projects, persons_list):
         for role in project.roles :
             feasible_role = false
             for person in persons_list : 
-                for skill in person.skills : 
+                for skill in person.skills.keys() : 
                     if skill == role : 
                         feasible_role = true 
                         persons_list.remove(person)
