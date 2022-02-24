@@ -5,8 +5,8 @@ def project_possible_list(remaining_projects, persons_list):
         for role in project.roles :
             feasible_role = false
             for person in persons_list : 
-                for key in person.index : 
-                    if key == role : 
+                for skill in person.skills.keys() : 
+                    if skill == role : 
                         feasible_role = true 
                         persons_list.remove(person)
                         break
@@ -16,4 +16,3 @@ def project_possible_list(remaining_projects, persons_list):
                  available_projects.remove(project);
                  break
     return available_projects
-
