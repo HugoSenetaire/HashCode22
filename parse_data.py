@@ -99,7 +99,9 @@ class Project:
 
 
 if __name__ == "__main__":
-    path = PATHS["a"]
+    path = PATHS["b"]
 
     contributors, projects = parse_data(path)
-    print("skills:\n", compute_skills(contributors, projects))
+
+    print(sum([project.length for project in projects]))
+    print(max([project.best_before + project.score for project in projects]))

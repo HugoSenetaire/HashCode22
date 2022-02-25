@@ -17,10 +17,15 @@ def update_t(projects, contributors, t):
 
 
 def update_choose(projects, contributors, best_project, best_contributors):
-    for worker in best_contributors:
+    for i,worker in enumerate(best_contributors):
         for person in contributors:
             if person.name == worker.name:
                 person.available_in = best_project.length
+                required_skill_name =  best_project.roles[i].skill_name
+                required_skill_level =  best_project.roles[i].skill_level
+                if required_skill_level == worker.skills[required_skill_name]:
+                    person.skills[required_skill_name]+=1
+
     for i, project in enumerate(projects):
         if project.name == best_project.name:
             del projects[i]

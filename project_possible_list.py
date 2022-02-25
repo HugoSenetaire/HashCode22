@@ -1,36 +1,49 @@
-import copy
-import tqdm
 from list_all_contributors import get_all_combination_contributor, get_combination_contributor
-# def project_possible_list(projects, persons_list):
-#     remaining_projects = copy.deepcopy(projects)
-#     available_projects = remaining_projects
-#     for project in remaining_projects:
-#         available_persons = persons_list
-#         feasible_project = False 
-#         for role in project.roles :
-#             feasible_role = False
-#             for person in persons_list : 
-#                 if person.available_in < 1 :
-#                     for skill in person.skills.keys() : 
-#                         if skill == role : 
-#                             feasible_role = True 
-#                             available_persons.remove(person)
-#                             break
-#                     if feasible_role : 
-#                         break
-#             if not feasible_role : 
-#                 available_projects.remove(project)
-#                 break
-#     return available_projects
-
+import pandas as pd 
+from scipy.optimize import linear_sum_assignment
 
 def project_possible_list(projects, persons_list):
-    remaining_projects = copy.deepcopy(projects)
-    available_projects = []
-    while len(remaining_projects)>0:
+    possible_projects=[]
+    for project in projects:
+        if is_project_possible(project, persons_list)[0]:
+            possible_projects.append(project)
+    return possible_projects
 
-        project = remaining_projects.pop()
-        output = get_combination_contributor(project.roles, [], persons_list, return_first= True)
-        if len(output)>0 :
-            available_projects.append(project)
-    return available_projects
+def is_project_possible(project, persons_list):
+    #TODO: compute this offline, list of skills of person then here just check for availability
+
+    dicos = []
+    persons = []
+    for person in persons_list:
+        if person.available_in < 1:
+            dico = {}
+            for skill in person.skills:
+                #TODO: optimize this
+                for role in project.roles:
+                    if skill == role.skill_name and person.skills[skill]>=role.skill_level:
+                        dico[skill]=1
+            dicos.append(dico)
+            persons.append(person)
+    data = pd.DataFrame(dicos, columns=[role.skill_name for role in project.roles]).fillna(0).to_numpy()
+    if not len(data):
+        return False, []
+    row_ind, col_ind = linear_sum_assignment((-1)*data)
+    assigned_persons = []
+    for i in range(len(row_ind)):
+        index = col_ind.tolist().index(i)
+        assigned_persons.append(persons[row_ind[index]])
+    max_couplage = data[row_ind, col_ind].sum()
+    return max_couplage == len(project.roles), assigned_persons
+
+
+
+# def project_possible_list(projects, persons_list):
+#     remaining_projects = copy.deepcopy(projects)
+#     available_projects = []
+#     while len(remaining_projects)>0:
+
+#         project = remaining_projects.pop()
+#         output = get_combination_contributor(project.roles, [], persons_list, return_first= True)
+#         if len(output)>0 :
+#             available_projects.append(project)
+#     return available_projects
