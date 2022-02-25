@@ -1,6 +1,7 @@
 from list_all_contributors import get_all_combination_contributor, get_combination_contributor
 import pandas as pd 
 from scipy.optimize import linear_sum_assignment
+from tqdm import tqdm
 
 def project_possible_list(projects, persons_list):
     possible_projects=[]
@@ -9,9 +10,13 @@ def project_possible_list(projects, persons_list):
             possible_projects.append(project)
     return possible_projects
 
+# def get_bipartite_graph(projects, persons_list):
+    
+
 def is_project_possible(project, persons_list):
     #TODO: compute this offline, list of skills of person then here just check for availability
-
+    #TODO: some persons seem to be assigned to project out of their reach investigate why
+    # is it an issue with learning ?
     dicos = []
     persons = []
     for person in persons_list:
@@ -19,12 +24,12 @@ def is_project_possible(project, persons_list):
             dico = {}
             for skill in person.skills:
                 #TODO: optimize this
-                for role in project.roles:
+                for i,role in enumerate(project.roles):
                     if skill == role.skill_name and person.skills[skill]>=role.skill_level:
-                        dico[skill]=1
+                        dico[i]=1
             dicos.append(dico)
             persons.append(person)
-    data = pd.DataFrame(dicos, columns=[role.skill_name for role in project.roles]).fillna(0).to_numpy()
+    data = pd.DataFrame(dicos, columns=[i for i in range(len(project.roles))]).fillna(0).to_numpy()
     if not len(data):
         return False, []
     row_ind, col_ind = linear_sum_assignment((-1)*data)

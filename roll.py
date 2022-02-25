@@ -38,7 +38,8 @@ def roll_project_list_project_possible(contributors, projects, cost_function):
 
       dispo_projects = project_possible_list(projects, contributors)
 
-      while len(dispo_projects)>0 :
+      while len(dispo_projects)>0:
+          print(f"Iter {t}/{max_iter}; Dispo projects {len(dispo_projects)}")
           i,best_project = get_best_project(dispo_projects, cost_function) # Return a class Project element
           heapq.heappush(heap,t+best_project.length)
           # TODO: for now we return one possible combination with no cost function, do better
