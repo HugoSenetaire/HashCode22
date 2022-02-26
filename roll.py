@@ -23,10 +23,11 @@ def roll_project_list_project_possible(contributors, projects, score_function):
   trajectory = ""
   max_iter = max([project.best_before + project.score for project in projects])
   heap = [0]
+  done_projects_count = 0
 
   t=0
-  while t<max_iter and heap:
-      print(f"Iter {t}/{max_iter}")
+  while t<max_iter:
+      print(f"Iter {t}/{max_iter} - projects done: {done_projects_count}/{nb_project_init}")
       if len(projects)<1:
         break
 
@@ -37,7 +38,7 @@ def roll_project_list_project_possible(contributors, projects, score_function):
       start = time()
       while len(projects_graphs.columns)>0:
           #TODO: change iter print
-          print(f"Iter {t}/{max_iter}; Dispo projects {len(projects_graphs.groupby(level=0, axis=1))} / {nb_project_init}")
+          print(f"Iter {t}/{max_iter}; Dispo projects {len(projects_graphs.groupby(level=0, axis=1))}")
           best_project = get_best_project(projects_graphs, score_function) # Return a class Project element
           # print("best_project", time()-start)
           start = time()
@@ -47,6 +48,7 @@ def roll_project_list_project_possible(contributors, projects, score_function):
           # TODO: for now we return one possible combination with no cost function, do better
           _,best_contributors = is_project_possible(projects_graphs[best_project])       # 
 
+          done_projects_count += 1
           # print("is_project_possible", time()-start)
           start = time()
           projects, contributors = update_choose(projects, contributors, best_project, best_contributors)
@@ -64,6 +66,9 @@ def roll_project_list_project_possible(contributors, projects, score_function):
           # print("remove_impossible_projects_graphs", time()-start)
           start = time()
       
+      # No project are in progress
+      if not heap:
+        break
       # Go to next interestng timestep
       next_time = heapq.heappop(heap)
       for _ in range(next_time-t +1 ):
