@@ -30,8 +30,9 @@ def is_project_possible(project, persons_list):
             dicos.append(dico)
             persons.append(person)
     data = pd.DataFrame(dicos, columns=[i for i in range(len(project.roles))]).fillna(0).to_numpy()
-    if not len(data):
+    if not len(data) or data.shape[0] < data.shape[1]:
         return False, []
+    
     row_ind, col_ind = linear_sum_assignment((-1)*data)
     assigned_persons = []
     for i in range(len(row_ind)):

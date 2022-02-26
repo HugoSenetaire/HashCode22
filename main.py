@@ -6,7 +6,7 @@ from time import time
 
 if __name__ == '__main__':
     start_time = time()
-    dataset = "a"
+    dataset = "b"
     path = PATHS[dataset]
 
     contributors, projects = parse_data(path)
