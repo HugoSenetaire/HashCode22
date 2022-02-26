@@ -89,13 +89,17 @@ class Project:
 
     def __str__(self):
         return (
-            f"<Project {self.name} | score: {self.score} | roles : {len(self.roles)}>"
+            f"<Project {self.name}>"
         )
 
     def __repr__(self) -> str:
         return (
-            f"<Project {self.name} | score: {self.score} | roles : {len(self.roles)}>"
+            f"<Project {self.name}>"
         )
+    
+    def __lt__(self, other):
+        return self.name < other.name
+    
 
 
 if __name__ == "__main__":

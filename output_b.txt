@@ -1,4 +1,4 @@
-69
+55
 MarsUltrav8
 PhilippI SergeyU SusanQ PhilippP StefanQ BenjaminT RuthX BakhodirG MatasW 
 StreamXv6
@@ -109,31 +109,3 @@ StadiaZv2
 BakhodirG JenZ MichalP FionaF ThomasK MatasH 
 CultureProv7
 MatasW TatiyanaC PhilippY SergeyU ClementT ThomasM BakhodirW ClementE 
-SitesUltrav5
-SergeyU PhilippI MatasW TatiyanaC LarryX SergeyT PhilippY SundarP 
-SantaTrackerXv4
-HiroshiW ThomasM ClementE BakhodirG ClementL FionaJ SergeyU PhilippH SusanQ MichalP 
-GameLitev8
-PhilippP PhilippK MatasW SergeyN 
-WebserverProv4
-HiroshiF NellyX PhilippP PhilippI PhilippH ClementE SergeyU MatasW PhilippY 
-AlertsLitev7
-SergeyN PrabhakarR SergeyT BenjaminT 
-SearchNextv1
-SergeyV ThomasM MichalB SundarP ThomasK 
-DataZv2
-SusanQ ThomasM ClementM FionaF StefanQ PhilippH SergeyN SergeyT 
-CastOSNextv8
-LarryO LarryX ClementM BakhodirG ThomasM BakhodirW NellyY TatiyanaC 
-PhotoProv3
-SergeyT HiroshiF BakhodirD SusanQ MichalP SergeyV SergeyU 
-WearOSProv2
-FionaN NellyY SergeyV PhilippY FionaJ ThomasM MatasW PhilippH StefanQ 
-AndroidTVNextv1
-MatasC NellyX SergeyV LarryO PhilippP ThomasM SergeyU SundarL 
-DreamSv2
-SusanQ PhilippP SergeyN LarryO PhilippI MatasW 
-PhoneUltrav1
-BakhodirW LarryO ThomasM SundarH StefanQ 
-SkyLitev6
-TatiyanaC ThomasM PhilippI 
