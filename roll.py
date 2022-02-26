@@ -1,19 +1,17 @@
 import heapq
-from traceback import TracebackException
 from update_function import update_t, update_choose
 from write_trajectory import write_trajectory
 from get_best_project import get_best_project
 from get_best_contributor import get_best_combination
 from project_possible_list import is_project_possible, project_possible_list
-from tqdm import tqdm 
 
-def roll_project_list_project_possible(contributors, projects, cost_function):
+def roll_project_list_project_possible(contributors, projects, score_function):
   """
   Roll the project list until we fill all projects  
   #Parameters :
   #   contributors : list of <Contributor>
   #   projects : list of <Project>
-  #   cost_function : function cost that take as input a project, returns a float
+  #   score_function : function cost that take as input a project, returns a float
 
   #Return :
   #   trajectory
@@ -40,7 +38,7 @@ def roll_project_list_project_possible(contributors, projects, cost_function):
 
       while len(dispo_projects)>0:
           print(f"Iter {t}/{max_iter}; Dispo projects {len(dispo_projects)}")
-          i,best_project = get_best_project(dispo_projects, cost_function) # Return a class Project element
+          i,best_project = get_best_project(dispo_projects, score_function) # Return a class Project element
           heapq.heappush(heap,t+best_project.length)
           # TODO: for now we return one possible combination with no cost function, do better
           _,best_contributors = is_project_possible(best_project, contributors)       # 
@@ -59,13 +57,13 @@ def roll_project_list_project_possible(contributors, projects, cost_function):
 
 
 
-def roll_project_list_project_contributor_possible(contributors, projects, cost_function, max_iter = 1e5):
+def roll_project_list_project_contributor_possible(contributors, projects, score_function, max_iter = 1e5):
   """
   Roll the project list until we fill all projects. Difference with previous is we treat contributor and project at the same time for value
   #Parameters :
   #   contributors : list of <Contributor>
   #   projects : list of <Project>
-  #   cost_function : function cost that take as input a contributor and a project, returns a float
+  #   score_function : function cost that take as input a contributor and a project, returns a float
 
   #Return :
   #   trajectory : Txt file with the trajectory 
@@ -79,7 +77,7 @@ def roll_project_list_project_contributor_possible(contributors, projects, cost_
       update_t(projects, contributors, t)
       dispo_projects,dispo_contributors = project_contributors_possible_list(projects, contributors)
       while len(dispo_projects)>0 :
-          best_project, best_contributor = get_best_project_and_contributors(dispo_projects, contributors, cost_function)
+          best_project, best_contributor = get_best_project_and_contributors(dispo_projects, contributors, score_function)
           
           update_choose(projects, contributors, best_project, best_contributor)
           trajectory = write_trajectory(trajectory, best_project, best_contributor)
