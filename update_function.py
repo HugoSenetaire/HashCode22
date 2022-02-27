@@ -7,8 +7,7 @@ from paths import PATHS
 
 def update_t(projects, contributors, t):
     for person in contributors:
-        if person.available_in > 0:
-            person.available_in -= 1
+        person.available_in -= 1
 
     for project in projects:
         if (t + project.length) > project.best_before:

@@ -77,6 +77,10 @@ class Contributor:
     def __repr__(self):
         return f"<Contributor {self.name} | {self.skills}>"
 
+# long projects mobilize contributors and prevent us from assigning new projects
+# so we add a coefficient to penalize a bit more heavily long projects
+# TODO: put nice value here (average score per day ?)
+PROJECT_LENGTH_PENALTY_COEFFICIENT = 10000
 
 class Project:
     def __init__(self, name, length, score, best_before, roles):
@@ -85,7 +89,7 @@ class Project:
         self.score = score
         self.best_before = best_before
         self.roles = roles
-        self.score_per_day = score / length
+        self.score_per_day = score / (PROJECT_LENGTH_PENALTY_COEFFICIENT * length)
 
     def __str__(self):
         return (

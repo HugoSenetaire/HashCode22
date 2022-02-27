@@ -3,7 +3,7 @@ from update_function import update_t, update_choose
 from write_trajectory import write_trajectory
 from get_best_project import get_best_project
 from get_best_contributor import get_best_combination
-from project_possible_list import get_projects_bipartite_graph, is_project_possible, remove_impossible_projects_graphs, update_bipartite_graph
+from project_possible_list import get_projects_bipartite_graph, get_projects_bipartite_graph_bis, is_project_possible, remove_impossible_projects_graphs, remove_rows_unavailable_persons
 from tqdm import tqdm 
 from time import time
 
@@ -24,6 +24,8 @@ def roll_project_list_project_possible(contributors, projects, score_function):
   max_iter = max([project.best_before + project.score for project in projects])
   heap = [0]
   done_projects_count = 0
+  # get_projects_bipartite_graph_bis(projects, contributors)
+  # projects_graphs = get_projects_bipartite_graph(projects, contributors)
 
   t=0
   while t<max_iter:
@@ -33,12 +35,18 @@ def roll_project_list_project_possible(contributors, projects, score_function):
 
       # Instead of recomputing all bipartite graphs we only need to recompute rows where the
       # contributor has improved its skills in the last project
-      projects_graphs = get_projects_bipartite_graph(projects, contributors)
-      remove_impossible_projects_graphs(projects_graphs)
+      # And add contributors that are available again after finishing a project
       start = time()
+      projects_graphs = get_projects_bipartite_graph(projects, contributors)
+      
+      print("get_projects_bipartite_graph", time()-start)
+      start = time()
+      remove_impossible_projects_graphs(projects_graphs)
+      print("remove_impossible_projects_graphs", time()-start)
       while len(projects_graphs.columns)>0:
           #TODO: change iter print
           print(f"Iter {t}/{max_iter}; Dispo projects {len(projects_graphs.groupby(level=0, axis=1))}")
+          start = time()
           best_project = get_best_project(projects_graphs, score_function) # Return a class Project element
           # print("best_project", time()-start)
           start = time()
@@ -54,12 +62,15 @@ def roll_project_list_project_possible(contributors, projects, score_function):
           projects, contributors = update_choose(projects, contributors, best_project, best_contributors)
           # print("update_chose", time()-start)
           start = time()
-          update_bipartite_graph(projects_graphs)
-          # print("update_bipartite_graph", time()-start)
+          remove_rows_unavailable_persons(projects_graphs)
+          # print("remove_rows_unavailable_persons", time()-start)
           start = time()
           
           trajectory = write_trajectory(trajectory, best_project, best_contributors)
-          del projects_graphs[best_project]
+          start = time()
+          projects_graphs.drop(columns=best_project, level=0, inplace=True)
+          # print("del best project", time()-start)
+          start = time()
           # Contributors have been assigned to a project, update list of possible projects
           # For current time step
           remove_impossible_projects_graphs(projects_graphs)
