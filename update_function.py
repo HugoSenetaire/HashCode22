@@ -7,13 +7,11 @@ from paths import PATHS
 
 def update_t(projects, contributors, t):
     for person in contributors:
-        if person.available_in > 0:
-            person.available_in -= 1
+        person.available_in -= 1
 
     for project in projects:
         if (t + project.length) > project.best_before:
-            if project.score_per_day > 1/ project.length:
-                project.score_per_day -= 1 / project.length
+            project.score_per_day = max(0, project.score_per_day-1/project.length)
 
 
 def update_choose(projects, contributors, best_project, best_contributors):
