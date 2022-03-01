@@ -6,12 +6,10 @@ from time import time
 
 if __name__ == '__main__':
     start_time = time()
-    dataset = "b"
+    dataset = "f"
     path = PATHS[dataset]
 
     contributors, projects = parse_data(path)
-    print("skills:\n", compute_skills(contributors, projects))
-    
 
     current_score_function = score_function
 

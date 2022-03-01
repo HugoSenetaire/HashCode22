@@ -3,7 +3,9 @@ from update_function import update_t, update_choose
 from write_trajectory import write_trajectory
 from get_best_project import get_best_project
 from get_best_contributor import get_best_combination
-from project_possible_list import is_project_possible, project_possible_list
+from project_possible_list import get_projects_bipartite_graph, is_project_possible, remove_impossible_projects_graphs, update_bipartite_graph
+from tqdm import tqdm 
+from time import time
 
 def roll_project_list_project_possible(contributors, projects, score_function):
   """
@@ -21,33 +23,59 @@ def roll_project_list_project_possible(contributors, projects, score_function):
   trajectory = ""
   max_iter = max([project.best_before + project.score for project in projects])
   heap = [0]
+  done_projects_count = 0
 
   t=0
-  while t<max_iter and heap:
-      print(f"Iter {t}/{max_iter}")
+  while t<max_iter:
+      print(f"Iter {t}/{max_iter} - projects done: {done_projects_count}/{nb_project_init}")
       if len(projects)<1:
         break
 
-      next_time = heapq.heappop(heap)
+      # Instead of recomputing all bipartite graphs we only need to recompute rows where the
+      # contributor has improved its skills in the last project
+      projects_graphs = get_projects_bipartite_graph(projects, contributors)
+      remove_impossible_projects_graphs(projects_graphs)
+      start = time()
+      while len(projects_graphs.columns)>0:
+          #TODO: change iter print
+          print(f"Iter {t}/{max_iter}; Dispo projects {len(projects_graphs.groupby(level=0, axis=1))}")
+          best_project = get_best_project(projects_graphs, score_function) # Return a class Project element
+          # print("best_project", time()-start)
+          start = time()
 
+          if t+best_project.length not in heap:
+            heapq.heappush(heap,t+best_project.length)
+          # TODO: for now we return one possible combination with no cost function, do better
+          _,best_contributors = is_project_possible(projects_graphs[best_project])       # 
+
+          done_projects_count += 1
+          # print("is_project_possible", time()-start)
+          start = time()
+          projects, contributors = update_choose(projects, contributors, best_project, best_contributors)
+          # print("update_chose", time()-start)
+          start = time()
+          update_bipartite_graph(projects_graphs)
+          # print("update_bipartite_graph", time()-start)
+          start = time()
+          
+          trajectory = write_trajectory(trajectory, best_project, best_contributors)
+          del projects_graphs[best_project]
+          # Contributors have been assigned to a project, update list of possible projects
+          # For current time step
+          remove_impossible_projects_graphs(projects_graphs)
+          # print("remove_impossible_projects_graphs", time()-start)
+          start = time()
+      
+      # No project are in progress
+      if not heap:
+        break
+      # Go to next interestng timestep
+      next_time = heapq.heappop(heap)
       for _ in range(next_time-t +1 ):
         update_t(projects, contributors, t)
         t+=1
+      
 
-      dispo_projects = project_possible_list(projects, contributors)
-
-      while len(dispo_projects)>0:
-          print(f"Iter {t}/{max_iter}; Dispo projects {len(dispo_projects)}")
-          i,best_project = get_best_project(dispo_projects, score_function) # Return a class Project element
-          heapq.heappush(heap,t+best_project.length)
-          # TODO: for now we return one possible combination with no cost function, do better
-          _,best_contributors = is_project_possible(best_project, contributors)       # 
-
-          projects, contributors = update_choose(projects, contributors, best_project, best_contributors)
-          
-          trajectory = write_trajectory(trajectory, best_project, best_contributors)
-          dispo_projects.pop(i)
-          dispo_projects = project_possible_list(dispo_projects, contributors)
 
   nb_project_final = len(projects)
   trajectory = str(nb_project_init-nb_project_final) +"\n" + trajectory
